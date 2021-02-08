@@ -7,8 +7,8 @@ This lab is meant to get students more accustomed to the technologies used in de
 </ul>
 
 </br>
-<h2><strong>Required Attributes</strong></h3>
-<h3><strong>Profile Routes</strong></h3>
+<h1><strong>Required Attributes</strong></h3>
+<h2><strong>Profile Routes</strong></h2>
 <ul>
 <li> <strong>GET/Profile</strong>
  </br>
