@@ -4,18 +4,20 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+ now = datetime.now()
 dte = datetime.datetime.now()
-UserProfile = {
-    "sucess": True,
+
+UserProfile = [
+    "success": True,
     "data": {
         "last_updated": "",
         "username": "Hannibal",
         "role": "Engineer",
         "color": "yellow"
     }
-}
+]
 tankNum = 0
-tank_DB = []
+tankdt = []
 
 
 @app.route("/")
@@ -25,17 +27,7 @@ def home():
 
 @app.route("/profile", methods=["GET", "POST", "PATCH"])
 def profile():
-    if request.method == "PATCH":
-        UserProfile["data"]["last_updated"] = (dte.strftime("%c"))
-
-         tempDict = request.json
-          attributes = tempDict.keys()
-
-           for attribute in attributes:
-                UserProfile["data"][attribute] = tempDict[attribute]
-
-            return jsonify(UserProfile)
-    if request.method == "POST":
+       if request.method == "POST":
         UserProfile["data"]["last_updated"] = (dte.strftime("%c"))
         UserProfile["data"]["username"] = (request.json["username"])
         UserProfile["data"]["role"] = (request.json["role"])
@@ -46,6 +38,18 @@ def profile():
     else:
         return jsonify(UserProfile)
 
+   elif request.method == "PATCH":
+        UserProfile["data"]["last_updated"] = (dte.strftime("%c"))
+
+         tempDict = request.json
+          attributes = tempDict.keys()
+
+           for attribute in attributes:
+                UserProfile["data"][attribute] = tempDict[attribute]
+
+            return jsonify(UserProfile)
+
+
 
 @app.route("/data", methods=["GET", "POST"])
 def data():
@@ -55,41 +59,40 @@ def data():
         posts = {}
         posts["id"] = Num
         posts["location"] = (request.json["location"])
-        posts["lat"] = (request.json["lat"])
-        posts["long"] = (request.json["long"])
+        posts["latitude"] = (request.json["latitude"])
+        posts["longitude"] = (request.json["longitude"])
         posts["percentage_full"] = (request.json["percentage_full"])
 
-        tank_DB.append(posts)
-        return jsonify(tank_DB)
+        tankdt.append(posts)
+        return jsonify(tankdt)
 
     else:
-        return jsonify(tank_DB)
+        return jsonify(tankdt)
 
 
-@app.route("/data/<int:tankID>", methods=["PATCH", "DELETE"])
-def update(tankID):
+@app.route("/data/<int:tankNum>", methods=["PATCH", "DELETE"])
+def update(tankNum):
     if request.method == "PATCH":
-        for index in tank_DB:
-            if index["id"] == tankID:
+        for index in tankdt:
+            if index["id"] == tankNum:
                 tempDict = request.json
                 attributes = tempDict.keys()
 
                 for attribute in attributes:
                     index[attribute] = tempDict[attribute]
 
-        return jsonify(tank_DB)
+        return jsonify(tankdt)
 
     elif request.method == "DELETE":
-        for index in tank_DB:
-            if index["id"] == tankID:
-                tank_DB.remove(index)
+        for index in tankdt:
+            if index["id"] == tankNum:
+                tankdt.remove(index)
 
-        return jsonify(tank_DB)
+        return jsonify(tankdt)
 
 
-if __name__ == '__main__':
+if __name__ == '__ServerMain__':
     app.run(
         debug=True,
         port=3000,
-        host="0.0.0.0"
     )
